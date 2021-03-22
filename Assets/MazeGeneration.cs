@@ -12,6 +12,8 @@ public class MazeGeneration : MonoBehaviour
     bool first = true;
     int finalI;
     int finalI2;
+    public bool complete = false;
+    public bool resetMaze = false;
 
     // Start is called before the first frame update
     void Start()
@@ -33,11 +35,29 @@ public class MazeGeneration : MonoBehaviour
             Generate(centre, centre);
         }
     }
+    public void Reset()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            for (int i2 = 0; i2 < 100; i2++)
+            {
+                map[i, i2] = true;
+            }
+        }
+        //Sets the centre to false so it isnt filled in
+        map[centre, centre] = false;
+        int random = UnityEngine.Random.Range(1, 5);
+        for (int i = 0; i < random; i++)
+        {
+            Debug.Log("RANNANAKSA");
+            Generate(centre, centre);
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
-
+        
         if (first == true)
         {
             //Checks if all the paths are finished and if they are runs the CheckExit function and stops this code repeating
@@ -59,6 +79,20 @@ public class MazeGeneration : MonoBehaviour
                 first = false;
                 CheckExit();
             }
+        }
+        if (resetMaze == true)
+        {
+            GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
+            foreach(GameObject g in walls)
+            {
+                Destroy(g);
+            }
+            paths = new List<Path>();
+            first = true;
+            complete = false;
+            resetMaze = false;
+            Debug.Log("Ruijrddjfnjfndkfjd");
+            Reset();
         }
 
 
@@ -168,10 +202,12 @@ public class MazeGeneration : MonoBehaviour
                 {
                     GameObject temp = Instantiate(wall);
                     temp.transform.position = new Vector3(i * 50, 0, i2 * 50);
+                    temp.transform.tag = "Wall";
 
                 }
             }
         }
+        complete = true;
     }
     public void Generate(int i, int i2)
     {
