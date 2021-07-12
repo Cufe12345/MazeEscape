@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class MazeGeneration : MonoBehaviour
 {
-    public bool[,] map = new bool[100, 100];
-    int centre = 49;
+    int difficulty = 0;
+    public int mapSize = 0;
+    int maxPaths = 0;
+    public bool[,] map;
+    int centre = 0;
     GameObject wall;
     List<Path> paths = new List<Path>();
     bool first = true;
@@ -20,11 +23,16 @@ public class MazeGeneration : MonoBehaviour
     void Start()
     {
         //Initialise's the variables and sets the whole map to true to fill it up.
+        difficulty = 3;
+        mapSize = difficulty * 30;
+        maxPaths = difficulty * 20;
+        centre = (mapSize / 2) - 1;
+        map = new bool[mapSize, mapSize];
         wall = GameObject.Find("Cube");
         floor = GameObject.Find("Floor");
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < mapSize; i++)
         {
-            for (int i2 = 0; i2 < 100; i2++)
+            for (int i2 = 0; i2 < mapSize; i2++)
             {
                 map[i, i2] = true;
             }
@@ -39,9 +47,9 @@ public class MazeGeneration : MonoBehaviour
     }
     public void Reset()
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < mapSize; i++)
         {
-            for (int i2 = 0; i2 < 100; i2++)
+            for (int i2 = 0; i2 < mapSize; i2++)
             {
                 map[i, i2] = true;
             }
@@ -110,7 +118,7 @@ public class MazeGeneration : MonoBehaviour
         //Checks if there is an exit to the maze and then randomly chooses a side to have the only exit
         int preI = finalI;
         int preI2 = finalI2;
-        if (finalI == 99 || finalI == 0 || finalI2 == 99 || finalI2 == 0)
+        if (finalI == mapSize - 1 || finalI == 0 || finalI2 == mapSize - 1 || finalI2 == 0)
         {
             buildMap();
         }
@@ -121,20 +129,20 @@ public class MazeGeneration : MonoBehaviour
 
             if (r == 2)
             {
-                for (int a = 99; a > -1; a--)
+                for (int a = mapSize-1; a > -1; a--)
                 {
                     //finds the exit on this side and stores its coordinates
-                    if (map[a, 99] == false)
+                    if (map[a, mapSize - 1] == false)
                     {
                         finalI = a;
-                        finalI2 = 99;
+                        finalI2 = mapSize - 1;
                         break;
                     }
                 }
             }
             else if (r == 1)
             {
-                for (int a = 0; a < 100; a++)
+                for (int a = 0; a < mapSize; a++)
                 {
                     if (map[a, 0] == false)
                     {
@@ -146,7 +154,7 @@ public class MazeGeneration : MonoBehaviour
             }
             else if (r == 3)
             {
-                for (int a = 99; a > -1; a--)
+                for (int a = mapSize-1; a > -1; a--)
                 {
                     if (map[0, a] == false)
                     {
@@ -158,11 +166,11 @@ public class MazeGeneration : MonoBehaviour
             }
             else if (r == 4)
             {
-                for (int a = 0; a < 100; a++)
+                for (int a = 0; a < mapSize; a++)
                 {
-                    if (map[99, a] == false)
+                    if (map[mapSize - 1, a] == false)
                     {
-                        finalI = 99;
+                        finalI = mapSize - 1;
                         finalI2 = a;
                         break;
                     }
@@ -187,23 +195,23 @@ public class MazeGeneration : MonoBehaviour
     public void buildMap()
     {
         //fills in sides of the grid
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < mapSize; i++)
         {
             map[i, 0] = true;
-            map[i, 99] = true;
+            map[i, mapSize - 1] = true;
         }
-        for (int i2 = 0; i2 < 100; i2++)
+        for (int i2 = 0; i2 < mapSize; i2++)
         {
             map[0, i2] = true;
-            map[99, i2] = true;
+            map[mapSize - 1, i2] = true;
         }
         Debug.LogWarning(finalI + " " + finalI2);
         //hollows out the exit selected in the checkExit function
         map[finalI, finalI2] = false;
         //iterates over the array spawning in walls in the correct places
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < mapSize; i++)
         {
-            for (int i2 = 0; i2 < 100; i2++)
+            for (int i2 = 0; i2 < mapSize; i2++)
             {
                 if (map[i, i2] == true)
                 {
@@ -225,7 +233,7 @@ public class MazeGeneration : MonoBehaviour
     public void Generate(int i, int i2)
     {
         //Creates a new path object
-        if (paths.Count < 600)
+        if (paths.Count < maxPaths)
         {
 
             Path p = new Path(i, i2);
@@ -272,7 +280,7 @@ public class MazeGeneration : MonoBehaviour
             int preI = 0;
             int preI2 = 0;
 
-            while (i > 0 && i2 > 0 && i < 99 && i2 < 99)
+            while (i > 0 && i2 > 0 && i < script.mapSize - 1 && i2 < script.mapSize-1)
             {
                 preI = i;
                 preI2 = i2;
@@ -438,7 +446,7 @@ public class MazeGeneration : MonoBehaviour
 
                 }
                 //Reached end of maze
-                if (i >= 100 || i <= -1 || i2 >= 100 || i2 <= -1)
+                if (i >= script.mapSize || i <= -1 || i2 >= script.mapSize || i2 <= -1)
                 {
 
                     break;

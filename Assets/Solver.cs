@@ -18,8 +18,7 @@ public class Solver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        i = 49;
-        j = 49;
+        
         
         first = true;
         camera = GameObject.Find("Main Camera");
@@ -31,6 +30,8 @@ public class Solver : MonoBehaviour
         //stores the walking animation into a variable and disables it
         walking = transform.GetComponent<Animator>();
         walking.enabled = false;
+        i = (mazeGenerationScript.mapSize / 2) - 1;
+        j = i;
     }
 
     // Update is called once per frame
@@ -50,8 +51,8 @@ public class Solver : MonoBehaviour
                     mazeGenerationScript.resetMaze = true;
                     mazeGenerationScript.complete = false;
                     generationComplete = false;
-                    i = 49;
-                    j = 49;
+                    i = (mazeGenerationScript.mapSize / 2) - 1;
+                    j = i;
                     transform.position = new Vector3(i * 50, 1, j * 50);
                 }
             }
@@ -190,8 +191,8 @@ public class Solver : MonoBehaviour
         int moveNum = 0;
         bool goingBack = false;
         bool readDecisions = false;
-        float startPosX = 49 * 50;
-        float startPosY = 49 * 50; 
+        float startPosX = i * 50;
+        float startPosY = j * 50; 
         previousMove.Add("null");
         List<string> firstDecision = new List<string>();
         firstDecision.Add("PlaceHolder");
@@ -206,7 +207,7 @@ public class Solver : MonoBehaviour
                 
                 Debug.Log("MoveNum: " + moveNum);
                 //if its at any of these coordinates it means the enemy has escaped so breaks loop
-                if(i == 0 || i == 99 || j == 0 || j == 99)
+                if(i == 0 || i == mazeGenerationScript.mapSize-1 || j == 0 || j == mazeGenerationScript.mapSize-1)
                 {
                     escaped = true;
                     break;
