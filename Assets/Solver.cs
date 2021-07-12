@@ -14,6 +14,7 @@ public class Solver : MonoBehaviour
     bool reset = false;
     bool reset2 = false;
     Animator walking;
+    int difficultly = 0;
     float solverTime = 0.1f;
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,8 @@ public class Solver : MonoBehaviour
         camera = GameObject.Find("Main Camera");
         //Gets the maze generation script
         mazeGenerationScript = camera.GetComponent<MazeGeneration>();
+        difficultly = mazeGenerationScript.difficulty;
+        solverTime = (4 - difficultly) * 0.1f;
         generationComplete = false;
         //sets the AI to the starting position
         transform.position = new Vector3(i * 50, 1, j * 50);

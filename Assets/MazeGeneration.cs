@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MazeGeneration : MonoBehaviour
 {
-    int difficulty = 0;
+    public int difficulty = 0;
     public int mapSize = 0;
     int maxPaths = 0;
     public bool[,] map;
@@ -23,7 +23,9 @@ public class MazeGeneration : MonoBehaviour
     void Start()
     {
         //Initialise's the variables and sets the whole map to true to fill it up.
-        difficulty = 3;
+        //hard coded difficulty later on once main menu created it doesnt have to be hard coded
+        //map size and max paths initialised based on difficulty value
+        difficulty = 1;
         mapSize = difficulty * 30;
         maxPaths = difficulty * 20;
         centre = (mapSize / 2) - 1;
