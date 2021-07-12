@@ -14,12 +14,14 @@ public class MazeGeneration : MonoBehaviour
     int finalI2;
     public bool complete = false;
     public bool resetMaze = false;
+    GameObject floor;
 
     // Start is called before the first frame update
     void Start()
     {
         //Initialise's the variables and sets the whole map to true to fill it up.
         wall = GameObject.Find("Cube");
+        floor = GameObject.Find("Floor");
         for (int i = 0; i < 100; i++)
         {
             for (int i2 = 0; i2 < 100; i2++)
@@ -86,6 +88,11 @@ public class MazeGeneration : MonoBehaviour
             foreach(GameObject g in walls)
             {
                 Destroy(g);
+            }
+            GameObject[] floors = GameObject.FindGameObjectsWithTag("Floor");
+            foreach(GameObject g2 in floors)
+            {
+                Destroy(g2);
             }
             paths = new List<Path>();
             first = true;
@@ -204,6 +211,12 @@ public class MazeGeneration : MonoBehaviour
                     temp.transform.position = new Vector3(i * 50, 0, i2 * 50);
                     temp.transform.tag = "Wall";
 
+                }
+                else
+                {
+                    GameObject temp2 = Instantiate(floor);
+                    temp2.transform.position = new Vector3(i * 50, 0, i2 * 50);
+                    temp2.transform.tag = "Floor";
                 }
             }
         }

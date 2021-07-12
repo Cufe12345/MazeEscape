@@ -14,6 +14,7 @@ public class Solver : MonoBehaviour
     bool reset = false;
     bool reset2 = false;
     Animator walking;
+    float solverTime = 0.1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,9 +23,12 @@ public class Solver : MonoBehaviour
         
         first = true;
         camera = GameObject.Find("Main Camera");
+        //Gets the maze generation script
         mazeGenerationScript = camera.GetComponent<MazeGeneration>();
         generationComplete = false;
+        //sets the AI to the starting position
         transform.position = new Vector3(i * 50, 1, j * 50);
+        //stores the walking animation into a variable and disables it
         walking = transform.GetComponent<Animator>();
         walking.enabled = false;
     }
@@ -32,6 +36,7 @@ public class Solver : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Is ran when the ai has solved the maze. Tells the maze generation script to generate a new maze
         if(reset == true)
         {
             if (mazeGenerationScript.resetMaze == false)
@@ -51,10 +56,12 @@ public class Solver : MonoBehaviour
                 }
             }
         }
+        //Ran once the maze is generated in the MazeGeneration script
         if(mazeGenerationScript.complete == true)
         {
             generationComplete = true;
         }
+        //Calls the StartSolving method and resets some variables
         if(first == true)
         {
             if(generationComplete == true)
@@ -67,30 +74,37 @@ public class Solver : MonoBehaviour
                 
             }
         }
+        //The position where the enemy needs to move to
         Vector3 tempPos;
         tempPos.x = i*50;
         tempPos.y = transform.position.y;
         tempPos.z = j*50;
+        //Ran when the enemy needs to move
         if(transform.position.x != tempPos.x || transform.position.z != tempPos.z)
         {
+            //makes the enemy face the direction its going to walk in
             float rotationSpeed = Time.deltaTime * 50;
             Vector3 direction = (tempPos - transform.position).normalized;
             Quaternion rotation = Quaternion.LookRotation(direction);
 
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
+            //activates the walking animation
             walking.enabled = true;
         }
         else
         {
+            //disables the walking animation
             walking.enabled = false;
         }
         
-        
-        float speed = Time.deltaTime * 50;
+        //moves the enemy to the target location over time
+        float speed = 250/solverTime;
+        speed = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, tempPos, speed);
         
-    }
 
+    }
+    //A function used to move the enemys location in the array
     public void Move(string direction)
     {
         try
@@ -117,7 +131,7 @@ public class Solver : MonoBehaviour
             Debug.LogError("direction is " + direction);
         }
     }
-
+    //Gets all the possible moves the enemy has and returns it
     public List<string> CheckMoveOptions()
     {
         List<string> options = new List<string>();
@@ -140,7 +154,7 @@ public class Solver : MonoBehaviour
         return options;
 
     }
-    
+    //Gives the opposite direction of the string passed to it
     public string Opposite(string theValue)
     {
         if (theValue.Equals("left"))
@@ -161,12 +175,18 @@ public class Solver : MonoBehaviour
         }
         return null;
     }
-
+    //The solving method where most of the enemy maze solving takes place in
     public void StartSolving()
     {
+        /*stores a list of all the moves the enemy has made in order, with the most recent move the final item in the 
+         * array*/ 
         List<string> previousMove = new List<string>();
+        /*A list which basically stores every decision the enemy had to make and stores what direction the enemy came 
+         * from before reaching the decision and what direction the enemy decided to take*/
         List<List<string>> decisions = new List<List<string>>();
+        //if enemy has escaped from the maze
         bool escaped = false;
+        //what move number the enemy is on also used to keep track of the previous move array
         int moveNum = 0;
         bool goingBack = false;
         bool readDecisions = false;
@@ -177,7 +197,7 @@ public class Solver : MonoBehaviour
         firstDecision.Add("PlaceHolder");
         decisions.Add(firstDecision);
         moveNum++;
-      
+        //starts the solving coroutine
         StartCoroutine(Solver());
         IEnumerator Solver()
         {
@@ -185,15 +205,18 @@ public class Solver : MonoBehaviour
             while(escaped == false) {
                 
                 Debug.Log("MoveNum: " + moveNum);
-
+                //if its at any of these coordinates it means the enemy has escaped so breaks loop
                 if(i == 0 || i == 99 || j == 0 || j == 99)
                 {
                     escaped = true;
                     break;
                 }
+                //stores all possible move options for the enemy by calling the CheckMoveOptions function
                 List<string> options = CheckMoveOptions();
+                //checks if enemy is at start position
                 if(i*50 == startPosX && j*50 == startPosY)
                 {
+                    //checks if enemy has any move options
                     bool done = false;
                     foreach(string o in options)
                     {
@@ -207,6 +230,8 @@ public class Solver : MonoBehaviour
                         }
                         if(temp == false)
                         {
+                            /*moves enemy and stores the direction the enemy went in, into the previous move and
+                             * decisions array*/
                             goingBack = false;
                             Move(o);
                             previousMove.Add(o);
@@ -218,6 +243,8 @@ public class Solver : MonoBehaviour
                     }
                     if(done == false)
                     {
+                        /*Means the enemy has tried every path meaning there is no solution to the maze or something
+                         * went wrong*/
                         Debug.LogError("Failed to find solution to maze");
                         Debug.LogError("Decisiouse are: ");
                         foreach(string t in decisions[0])
@@ -228,6 +255,7 @@ public class Solver : MonoBehaviour
                     }
                 }
                 else {
+                    //Runs if enemy reached deadend and has to go back
                     if (goingBack == true)
                     {
                         Debug.LogError("GoBAck2");
@@ -248,10 +276,13 @@ public class Solver : MonoBehaviour
                     }
                     else
                     {
+                        //runs if the enemy has more than one move option
                         if (options.Count > 1)
                         {
+                            //runs if enemy has two move options
                             if (options.Count < 3)
                             {
+                                //checks which move option isnt going back to the direction it came from
                                 if (options[0] != Opposite(previousMove[moveNum - 1]))
                                 {
                                     Move(options[0]);
@@ -270,16 +301,22 @@ public class Solver : MonoBehaviour
                                 while (true)
                                 {
                                     Debug.Log(readDecisions);
+                                    //Checks if this is the enemy's first time at this decision or if its been here before
                                     if (readDecisions == false)
                                     {
+                                        /*randomly decides on a direction to move in from its options and makes sure
+                                         * that the move isnt going back to the direction it came from*/
                                         int randomNum = Random.Range(0, options.Count);
                                         if (options[randomNum] != Opposite(previousMove[moveNum - 1]))
                                         {
+                                            //Moves the enemy and stores the direction in the previous move array
                                             Move(options[randomNum]);
                                             previousMove.Add(options[randomNum]);
                                             moveNum++;
                                             List<string> temp = new List<string>();
-                                            //direction to go back from where you came frome before decision
+                                            /*stores the direction the enemy came from so that the enemy can go back from 
+                                             * where the nemy came frome before the decision and stores the move the
+                                             enemy decided to do*/
                                             temp.Add(Opposite(previousMove[moveNum - 2]));
                                             int currentNumMoves = moveNum;
                                             temp.Add(currentNumMoves.ToString());
@@ -292,9 +329,11 @@ public class Solver : MonoBehaviour
                                     }
                                     else
                                     {
+                                        //This is ran if enemy has been to this decision before
                                         Debug.Log("Reached");
                                         int randomNum = Random.Range(0, options.Count);
                                         bool possible = false;
+                                        //Checks if there are an moves which the enemy hasnt made yet at this decision
                                         for (int i = 0; i < options.Count; i++)
                                         {
                                             bool temp = false;
@@ -320,9 +359,14 @@ public class Solver : MonoBehaviour
                                             }
 
                                         }
+                                        //if there is a possible move runs this
                                         if (possible == true)
                                         {
                                             Debug.Log("Reached2");
+                                            /*checks if the choosen move isnt the direction the enemy came from
+                                             * and makes sure that the enemy didnt decide to go that way before
+                                             * at this decision*/
+
                                             if (options[randomNum] != Opposite(previousMove[moveNum - 1]))
                                             {
                                                 bool moveAble = true;
@@ -339,6 +383,8 @@ public class Solver : MonoBehaviour
                                                 }
                                                 if (moveAble == true)
                                                 {
+                                                    /*this runs if the move is valid and moves the enemy and stores
+                                                     * its decision in the previous move and decisions array*/
                                                     Debug.Log("Reached3 " + options[randomNum]);
                                                     Move(options[randomNum]);
                                                     previousMove.Add(options[randomNum]);
@@ -351,9 +397,12 @@ public class Solver : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*ran if no move options are left, it moves the enemy back to the direction
+                                             * it came from when it reached the decision for the first time
+                                             * it also removes the decision from the decision array.*/
                                             Debug.Log("Reached4");
                                             goingBack = true;
-                                            //int removeNum = moveNum - decisions[decisions.Count - 1][1];
+                                            
                                             decisions.RemoveAt(decisions.Count - 1);
                                             readDecisions = false;
                                             Move(Opposite(previousMove[moveNum - 1]));
@@ -362,15 +411,16 @@ public class Solver : MonoBehaviour
                                             break;
                                         }
                                     }
+                                    //disables the walking animation and waits for the specified time below
                                     walking.enabled = false;
-                                    yield return new WaitForSeconds(2f);
+                                    yield return new WaitForSeconds(solverTime);
 
                                 }
                             }
                         }
                         else
                         {
-
+                            //makes the enemy move back as it has reached a deadend.
                             goingBack = true;
                             Move(Opposite(previousMove[moveNum - 1]));
                             previousMove.RemoveAt(moveNum - 1);
@@ -382,12 +432,13 @@ public class Solver : MonoBehaviour
                         }
                     }
                 }
+                //disables the walking animation and waits for the specified time below
                 walking.enabled = false;
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(solverTime);
 
             }
             
-            Debug.Log("THIS IS RUUNIGN FOR SOME REASON");
+            //tells the script that the enemy has solved the maze and to reset the maze.
             reset = true;
             StopCoroutine(Solver());
             
