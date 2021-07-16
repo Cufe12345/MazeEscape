@@ -7,9 +7,11 @@ public class Movement : MonoBehaviour
     float speed = 500;
     float horizontalSpeed = 90;
     float verticalSpeed = 90;
+    float jumpSpeed = 2000;
     Rigidbody rb;
     GameObject player;
     GameObject camera;
+    Animator walk;
     List<int> keysPressed = new List<int>();
     // Start is called before the first frame update
     void Start()
@@ -17,15 +19,21 @@ public class Movement : MonoBehaviour
         player = GameObject.Find("Player");
         rb = player.GetComponent<Rigidbody>();
         camera = GameObject.Find("Main Camera");
+        walk = transform.GetComponent<Animator>();
+        walk.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Makes sure player is on the ground 
-        if(transform.position.y < 9)
+        if(transform.position.y < -2)
         {
             transform.position = new Vector3(transform.position.x, 50, transform.position.z);
+        }
+        if (transform.position.y > 1)
+        {
+            rb.AddForce(new Vector3(0, -207, 0));
         }
         //rotates player horizontally when mouse is moved
         transform.Rotate(0,Input.GetAxis("Mouse X") * horizontalSpeed * Time.deltaTime,0);
@@ -71,6 +79,15 @@ public class Movement : MonoBehaviour
         {
             keysPressed.Add(4);
         }
+        //Makes the player Jump when jump key is pressed
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if(transform.position.y <= 1)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, jumpSpeed * Time.deltaTime, rb.velocity.z);
+                
+            }
+        }
         
         //speeds up and slows down player
         if (Input.GetKey(KeyCode.N))
@@ -80,6 +97,14 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.M))
         {
             speed += 10;
+        }
+        if (keysPressed.Count == 0)
+        {
+            walk.enabled = false;
+        }
+        else
+        {
+            walk.enabled = true;
         }
         //passes the keysPressed array to the Final move function
         FinalMove(keysPressed);
@@ -134,11 +159,11 @@ public class Movement : MonoBehaviour
         }
         else if (direction == 4)
         {
-            //Same except sign changes due to direction
+            //Same except sign changes due to direction and components divided by 2 so you move half as fast backwards
             float rotation = player.transform.eulerAngles.y;
             float[] components = CalculateDirection(rotation);
-            components2[0] = -components[0];
-            components2[1] = -components[1];
+            components2[0] = -components[0]/2;
+            components2[1] = -components[1]/2;
         }
         return components2;
     }
