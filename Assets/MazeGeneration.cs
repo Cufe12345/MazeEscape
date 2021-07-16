@@ -25,7 +25,7 @@ public class MazeGeneration : MonoBehaviour
         //Initialise's the variables and sets the whole map to true to fill it up.
         //hard coded difficulty later on once main menu created it doesnt have to be hard coded
         //map size and max paths initialised based on difficulty value
-        difficulty = 1;
+        difficulty = 3;
         mapSize = difficulty * 30;
         maxPaths = difficulty * 20;
         centre = (mapSize / 2) - 1;

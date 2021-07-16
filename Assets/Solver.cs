@@ -16,25 +16,30 @@ public class Solver : MonoBehaviour
     Animator walking;
     int difficultly = 0;
     float solverTime = 0.1f;
+    GameObject player;
     // Start is called before the first frame update
     void Start()
     {
-        
-        
+
+        player = GameObject.Find("Player");
         first = true;
         camera = GameObject.Find("Main Camera");
         //Gets the maze generation script
         mazeGenerationScript = camera.GetComponent<MazeGeneration>();
+        //fetches the difficulty and sets the correct solving time
         difficultly = mazeGenerationScript.difficulty;
         solverTime = (4 - difficultly) * 0.1f;
         generationComplete = false;
         //sets the AI to the starting position
+        i = (mazeGenerationScript.mapSize / 2) - 1;
+        j = i;
+        player.transform.position = new Vector3(i * 50, 50, j * 50);
         transform.position = new Vector3(i * 50, 1, j * 50);
         //stores the walking animation into a variable and disables it
         walking = transform.GetComponent<Animator>();
         walking.enabled = false;
-        i = (mazeGenerationScript.mapSize / 2) - 1;
-        j = i;
+        
+
     }
 
     // Update is called once per frame
@@ -57,6 +62,7 @@ public class Solver : MonoBehaviour
                     i = (mazeGenerationScript.mapSize / 2) - 1;
                     j = i;
                     transform.position = new Vector3(i * 50, 1, j * 50);
+                    player.transform.position = new Vector3(i * 50, 50, j * 50);
                 }
             }
         }
