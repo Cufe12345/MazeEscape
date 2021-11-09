@@ -30,7 +30,7 @@ public class MazeGeneration : MonoBehaviour
         maxPaths = difficulty * 20;
         centre = (mapSize / 2) - 1;
         map = new bool[mapSize, mapSize];
-        wall = GameObject.Find("Cube");
+        wall = GameObject.Find("Wall");
         floor = GameObject.Find("Floor");
         for (int i = 0; i < mapSize; i++)
         {

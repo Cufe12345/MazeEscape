@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour
     GameObject camera;
     Animator walk;
     List<int> keysPressed = new List<int>();
+
     // Start is called before the first frame update
     void Start()
     {
