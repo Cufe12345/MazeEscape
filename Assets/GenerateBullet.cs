@@ -6,6 +6,9 @@ public class GenerateBullet : MonoBehaviour
 {
     GameObject bullet;
     GameObject bulletSpawner;
+    GameObject muzzleFlash;
+    float timer = 0.1f;
+    bool fired = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,10 +19,14 @@ public class GenerateBullet : MonoBehaviour
             if (transform.GetChild(i).gameObject.name.Equals("BulletSpawner"))
             {
                 bulletSpawner = transform.GetChild(i).gameObject;
-                break;
+                
+            }
+            else if (transform.GetChild(i).gameObject.name.Equals("MuzzleFlash"))
+            {
+                muzzleFlash = transform.GetChild(i).gameObject;
+                muzzleFlash.GetComponent<ParticleSystem>().Stop();
             }
         }
-        Debug.LogWarning(bulletSpawner);
     }
 
     // Update is called once per frame
@@ -28,8 +35,11 @@ public class GenerateBullet : MonoBehaviour
         //runs when left mouse button clicked
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            //Enables muzzle Flash
+            muzzleFlash.GetComponent<ParticleSystem>().Play();
             //duplicates bullet
             GameObject temp = Instantiate(bullet);
+            temp.GetComponentInChildren<MeshRenderer>().enabled = false;
             //sets new bullets position and rotation
             temp.transform.position = bulletSpawner.transform.position;
             float y = bulletSpawner.transform.eulerAngles.y - 10;
@@ -40,8 +50,19 @@ public class GenerateBullet : MonoBehaviour
             temp.GetComponent<Fired>().bulletSpawner = bulletSpawner;
             temp.GetComponent<Fired>().enabled = true;
             temp.GetComponent<Fired>().start = true;
-            
+            fired = true;
+            timer = 0.1f;
 
+        }
+        if(timer <= 0)
+        {
+            //Disables muzzle flash when set time is elapsed
+            muzzleFlash.GetComponent<ParticleSystem>().Stop();
+            fired = false;
+        }
+        else if(fired == true)
+        {
+            timer -= Time.deltaTime;
         }
     }
 }

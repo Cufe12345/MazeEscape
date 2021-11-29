@@ -16,7 +16,7 @@ public class Fired : MonoBehaviour
     void Start()
     {
         //sets bullet speed
-        speed = 1000;
+        speed = 2000;
         player = GameObject.Find("Player");
         move = player.transform.GetComponent<Movement>();
         rigi = transform.GetComponent<Rigidbody>();
@@ -49,6 +49,7 @@ public class Fired : MonoBehaviour
                 transform.rotation = Quaternion.LookRotation(newR);
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
                 //adds force to make bullet fire
+                transform.GetComponentInChildren<MeshRenderer>().enabled = true;
                 rigi.AddForce(transform.forward*speed*Time.deltaTime);
 
 
