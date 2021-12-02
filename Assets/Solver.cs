@@ -8,7 +8,7 @@ public class Solver : MonoBehaviour
     MazeGeneration mazeGenerationScript;
     public bool generationComplete;
     bool first;
-    bool[,] map;
+    int[,] map;
     int i;
     int j;
     bool reset = false;
@@ -145,19 +145,19 @@ public class Solver : MonoBehaviour
     public List<string> CheckMoveOptions()
     {
         List<string> options = new List<string>();
-        if(map[i+1,j] == false)
+        if(map[i+1,j] == 1)
         {
             options.Add("down");
         }
-        if (map[i - 1, j] == false)
+        if (map[i - 1, j] == 1)
         {
             options.Add("up");
         }
-        if (map[i, j + 1] == false)
+        if (map[i, j + 1] == 1)
         {
             options.Add("right");
         }
-        if (map[i, j - 1] == false)
+        if (map[i, j - 1] == 1)
         {
             options.Add("left");
         }

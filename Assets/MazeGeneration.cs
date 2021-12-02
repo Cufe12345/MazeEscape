@@ -8,7 +8,7 @@ public class MazeGeneration : MonoBehaviour
     public int difficulty = 0;
     public int mapSize = 0;
     int maxPaths = 0;
-    public bool[,] map;
+    public int[,] map;
     int centre = 0;
     GameObject wall;
     List<Path> paths = new List<Path>();
@@ -18,6 +18,7 @@ public class MazeGeneration : MonoBehaviour
     public bool complete = false;
     public bool resetMaze = false;
     GameObject floor;
+    GameObject enemy;
 
     // Start is called before the first frame update
     void Start()
@@ -26,21 +27,22 @@ public class MazeGeneration : MonoBehaviour
         //hard coded difficulty later on once main menu created it doesnt have to be hard coded
         //map size and max paths initialised based on difficulty value
         difficulty = 3;
+        enemy = GameObject.Find("Enemy");
         mapSize = difficulty * 30;
         maxPaths = difficulty * 20;
         centre = (mapSize / 2) - 1;
-        map = new bool[mapSize, mapSize];
+        map = new int[mapSize, mapSize];
         wall = GameObject.Find("Wall");
         floor = GameObject.Find("Floor");
         for (int i = 0; i < mapSize; i++)
         {
             for (int i2 = 0; i2 < mapSize; i2++)
             {
-                map[i, i2] = true;
+                map[i, i2] = 0;
             }
         }
-        //Sets the centre to false so it isnt filled in
-        map[centre, centre] = false;
+        //Sets the centre to 1 so it isnt filled in
+        map[centre, centre] = 1;
         int random = UnityEngine.Random.Range(1, 5);
         for (int i = 0; i < random; i++)
         {
@@ -53,11 +55,11 @@ public class MazeGeneration : MonoBehaviour
         {
             for (int i2 = 0; i2 < mapSize; i2++)
             {
-                map[i, i2] = true;
+                map[i, i2] = 0;
             }
         }
-        //Sets the centre to false so it isnt filled in
-        map[centre, centre] = false;
+        //Sets the centre to 1 so it isnt filled in
+        map[centre, centre] = 1;
         int random = UnityEngine.Random.Range(1, 5);
         for (int i = 0; i < random; i++)
         {
@@ -134,7 +136,7 @@ public class MazeGeneration : MonoBehaviour
                 for (int a = mapSize-1; a > -1; a--)
                 {
                     //finds the exit on this side and stores its coordinates
-                    if (map[a, mapSize - 1] == false)
+                    if (map[a, mapSize - 1] == 1)
                     {
                         finalI = a;
                         finalI2 = mapSize - 1;
@@ -146,7 +148,7 @@ public class MazeGeneration : MonoBehaviour
             {
                 for (int a = 0; a < mapSize; a++)
                 {
-                    if (map[a, 0] == false)
+                    if (map[a, 0] == 1)
                     {
                         finalI = a;
                         finalI2 = 0;
@@ -158,7 +160,7 @@ public class MazeGeneration : MonoBehaviour
             {
                 for (int a = mapSize-1; a > -1; a--)
                 {
-                    if (map[0, a] == false)
+                    if (map[0, a] == 1)
                     {
                         finalI = 0;
                         finalI2 = a;
@@ -170,7 +172,7 @@ public class MazeGeneration : MonoBehaviour
             {
                 for (int a = 0; a < mapSize; a++)
                 {
-                    if (map[mapSize - 1, a] == false)
+                    if (map[mapSize - 1, a] == 1)
                     {
                         finalI = mapSize - 1;
                         finalI2 = a;
@@ -199,34 +201,43 @@ public class MazeGeneration : MonoBehaviour
         //fills in sides of the grid
         for (int i = 0; i < mapSize; i++)
         {
-            map[i, 0] = true;
-            map[i, mapSize - 1] = true;
+            map[i, 0] = 0;
+            map[i, mapSize - 1] = 0;
         }
         for (int i2 = 0; i2 < mapSize; i2++)
         {
-            map[0, i2] = true;
-            map[mapSize - 1, i2] = true;
+            map[0, i2] = 0;
+            map[mapSize - 1, i2] = 0;
         }
         Debug.LogWarning(finalI + " " + finalI2);
         //hollows out the exit selected in the checkExit function
-        map[finalI, finalI2] = false;
+        map[finalI, finalI2] = 1;
         //iterates over the array spawning in walls in the correct places
         for (int i = 0; i < mapSize; i++)
         {
             for (int i2 = 0; i2 < mapSize; i2++)
             {
-                if (map[i, i2] == true)
+                if (map[i, i2] == 0)
                 {
                     GameObject temp = Instantiate(wall);
                     temp.transform.position = new Vector3(i * 50, 0, i2 * 50);
                     temp.transform.tag = "Wall";
 
                 }
+                else if(map[i, i2] == 1)
+                {
+                    GameObject temp2 = Instantiate(floor);
+                    temp2.transform.position = new Vector3(i * 50, 0, i2 * 50);
+                    temp2.transform.tag = "Floor";
+                }
                 else
                 {
                     GameObject temp2 = Instantiate(floor);
                     temp2.transform.position = new Vector3(i * 50, 0, i2 * 50);
                     temp2.transform.tag = "Floor";
+                    GameObject temp3 = Instantiate(enemy);
+                    temp3.transform.position = new Vector3(i*50,10,i2 * 50);
+
                 }
             }
         }
@@ -256,7 +267,7 @@ public class MazeGeneration : MonoBehaviour
     {
         static GameObject main2 = GameObject.Find("Main Camera");
         static MazeGeneration script = main2.GetComponent<MazeGeneration>();
-        public bool[,] map = script.map;
+        public int[,] map = script.map;
         public bool done = false;
         public bool original = false;
         int finalI;
@@ -289,6 +300,7 @@ public class MazeGeneration : MonoBehaviour
                 //random decides the direction of the path and random2 decides whever or not a new path is to be created
                 int random = UnityEngine.Random.Range(0, 4);
                 int random2 = UnityEngine.Random.Range(0, 50);
+                int random3 = UnityEngine.Random.Range(0, 10);
                 if (random == 0)
                 {
                     /*stops the path going in the opposite direction it started going in so for example
@@ -300,16 +312,16 @@ public class MazeGeneration : MonoBehaviour
                             /*runs checks to make sure that if it was to hollow out the direction it wants to go
                              * it wouldnt be touching another hollowed out square*/
 
-                            if (map[i - 2, i2] == false)
+                            if (map[i - 2, i2] == 1)
                             {
 
                                 up = true;
                             }
-                            else if (map[i - 1, i2 - 1] == false)
+                            else if (map[i - 1, i2 - 1] == 1)
                             {
                                 up = true;
                             }
-                            else if (map[i - 1, i2 + 1] == false)
+                            else if (map[i - 1, i2 + 1] == 1)
                             {
                                 up = true;
                             }
@@ -335,15 +347,15 @@ public class MazeGeneration : MonoBehaviour
                     {
                         try
                         {
-                            if (map[i + 2, i2] == false)
+                            if (map[i + 2, i2] == 1)
                             {
                                 down = true;
                             }
-                            else if (map[i + 1, i2 - 1] == false)
+                            else if (map[i + 1, i2 - 1] == 1)
                             {
                                 down = true;
                             }
-                            else if (map[i + 1, i2 + 1] == false)
+                            else if (map[i + 1, i2 + 1] == 1)
                             {
                                 down = true;
                             }
@@ -370,15 +382,15 @@ public class MazeGeneration : MonoBehaviour
                     {
                         try
                         {
-                            if (map[i, i2 - 2] == false)
+                            if (map[i, i2 - 2] == 1)
                             {
                                 left = true;
                             }
-                            else if (map[i - 1, i2 - 1] == false)
+                            else if (map[i - 1, i2 - 1] == 1)
                             {
                                 left = true;
                             }
-                            else if (map[i + 1, i2 - 1] == false)
+                            else if (map[i + 1, i2 - 1] == 1)
                             {
                                 left = true;
                             }
@@ -406,15 +418,15 @@ public class MazeGeneration : MonoBehaviour
                     {
                         try
                         {
-                            if (map[i, i2 + 2] == false)
+                            if (map[i, i2 + 2] == 1)
                             {
                                 right = true;
                             }
-                            else if (map[i - 1, i2 + 1] == false)
+                            else if (map[i - 1, i2 + 1] == 1)
                             {
                                 right = true;
                             }
-                            else if (map[i + 1, i2 + 1] == false)
+                            else if (map[i + 1, i2 + 1] == 1)
                             {
                                 right = true;
                             }
@@ -447,6 +459,7 @@ public class MazeGeneration : MonoBehaviour
                     script.Generate(i, i2);
 
                 }
+                
                 //Reached end of maze
                 if (i >= script.mapSize || i <= -1 || i2 >= script.mapSize || i2 <= -1)
                 {
@@ -456,7 +469,11 @@ public class MazeGeneration : MonoBehaviour
                 else
                 {
 
-                    map[i, i2] = false;
+                    map[i, i2] = 1;
+                    if (random3 == 2)
+                    {
+                        map[i, i2] = 3;
+                    }
                 }
 
                 yield return new WaitForSeconds(0.01f);
