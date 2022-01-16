@@ -50,12 +50,10 @@ public class Movement : MonoBehaviour
       //stops the camera being rotated vertically too far
         if (camera.transform.localEulerAngles.x > 70 && camera.transform.localEulerAngles.x < 178)
         {
-            Debug.LogError("Local Euler angle " + camera.transform.localEulerAngles.x);
             camera.transform.localRotation= Quaternion.Euler(70, 0, 0);
         }
         if (camera.transform.localEulerAngles.x <= 290 && camera.transform.localEulerAngles.x >178)
         {
-            Debug.LogError("Local Euler angle " + camera.transform.localEulerAngles.x);
             camera.transform.localRotation = Quaternion.Euler(290, 0, 0);
         }
 

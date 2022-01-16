@@ -19,7 +19,8 @@ public class MazeGeneration : MonoBehaviour
     public bool resetMaze = false;
     GameObject floor;
     GameObject enemy;
-
+    GameObject mapObject;
+    GameObject enemiesObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +28,7 @@ public class MazeGeneration : MonoBehaviour
         //hard coded difficulty later on once main menu created it doesnt have to be hard coded
         //map size and max paths initialised based on difficulty value
         difficulty = 3;
+        complete = false;
         enemy = GameObject.Find("Enemy");
         mapSize = difficulty * 30;
         maxPaths = difficulty * 20;
@@ -34,6 +36,8 @@ public class MazeGeneration : MonoBehaviour
         map = new int[mapSize, mapSize];
         wall = GameObject.Find("Wall");
         floor = GameObject.Find("Floor");
+        mapObject = GameObject.Find("Map");
+        enemiesObject = GameObject.Find("Enemies");
         for (int i = 0; i < mapSize; i++)
         {
             for (int i2 = 0; i2 < mapSize; i2++)
@@ -85,6 +89,7 @@ public class MazeGeneration : MonoBehaviour
                 else
                 {
                     fin = false;
+        
                 }
             }
             if (fin == true)
@@ -124,6 +129,7 @@ public class MazeGeneration : MonoBehaviour
         int preI2 = finalI2;
         if (finalI == mapSize - 1 || finalI == 0 || finalI2 == mapSize - 1 || finalI2 == 0)
         {
+            Debug.Log("Map DONE");
             buildMap();
         }
         else
@@ -136,7 +142,7 @@ public class MazeGeneration : MonoBehaviour
                 for (int a = mapSize-1; a > -1; a--)
                 {
                     //finds the exit on this side and stores its coordinates
-                    if (map[a, mapSize - 1] == 1)
+                    if (map[a, mapSize - 1] == 1 || map[a,mapSize -1] == 3)
                     {
                         finalI = a;
                         finalI2 = mapSize - 1;
@@ -148,7 +154,7 @@ public class MazeGeneration : MonoBehaviour
             {
                 for (int a = 0; a < mapSize; a++)
                 {
-                    if (map[a, 0] == 1)
+                    if (map[a, 0] == 1 || map[a,0] == 3)
                     {
                         finalI = a;
                         finalI2 = 0;
@@ -160,7 +166,7 @@ public class MazeGeneration : MonoBehaviour
             {
                 for (int a = mapSize-1; a > -1; a--)
                 {
-                    if (map[0, a] == 1)
+                    if (map[0, a] == 1 || map[0,a] == 3)
                     {
                         finalI = 0;
                         finalI2 = a;
@@ -172,7 +178,7 @@ public class MazeGeneration : MonoBehaviour
             {
                 for (int a = 0; a < mapSize; a++)
                 {
-                    if (map[mapSize - 1, a] == 1)
+                    if (map[mapSize - 1, a] == 1 || map[mapSize-1,a]== 3)
                     {
                         finalI = mapSize - 1;
                         finalI2 = a;
@@ -212,6 +218,7 @@ public class MazeGeneration : MonoBehaviour
         Debug.LogWarning(finalI + " " + finalI2);
         //hollows out the exit selected in the checkExit function
         map[finalI, finalI2] = 1;
+        int enemyCount = 1;
         //iterates over the array spawning in walls in the correct places
         for (int i = 0; i < mapSize; i++)
         {
@@ -222,6 +229,7 @@ public class MazeGeneration : MonoBehaviour
                     GameObject temp = Instantiate(wall);
                     temp.transform.position = new Vector3(i * 50, 0, i2 * 50);
                     temp.transform.tag = "Wall";
+                    temp.transform.parent = mapObject.transform;
 
                 }
                 else if(map[i, i2] == 1)
@@ -229,14 +237,20 @@ public class MazeGeneration : MonoBehaviour
                     GameObject temp2 = Instantiate(floor);
                     temp2.transform.position = new Vector3(i * 50, 0, i2 * 50);
                     temp2.transform.tag = "Floor";
+                    temp2.transform.parent = mapObject.transform;
                 }
                 else
                 {
                     GameObject temp2 = Instantiate(floor);
                     temp2.transform.position = new Vector3(i * 50, 0, i2 * 50);
                     temp2.transform.tag = "Floor";
+                    temp2.transform.parent = mapObject.transform;
                     GameObject temp3 = Instantiate(enemy);
                     temp3.transform.position = new Vector3(i*50,10,i2 * 50);
+                    temp3.transform.parent = enemiesObject.transform;
+                    temp3.GetComponent<EnemyAttack>().enabled = true;
+                    temp3.name = "Enemy" + enemyCount;
+                    enemyCount++;
 
                 }
             }
@@ -312,16 +326,16 @@ public class MazeGeneration : MonoBehaviour
                             /*runs checks to make sure that if it was to hollow out the direction it wants to go
                              * it wouldnt be touching another hollowed out square*/
 
-                            if (map[i - 2, i2] == 1)
+                            if (map[i - 2, i2] == 1 || map[i - 2, i2] == 3)
                             {
 
                                 up = true;
                             }
-                            else if (map[i - 1, i2 - 1] == 1)
+                            else if (map[i - 1, i2 - 1] == 1 || map[i - 1, i2 - 1] == 3 )
                             {
                                 up = true;
                             }
-                            else if (map[i - 1, i2 + 1] == 1)
+                            else if (map[i - 1, i2 + 1] == 1 || map[i - 1, i2 + 1] == 3 )
                             {
                                 up = true;
                             }
@@ -347,15 +361,15 @@ public class MazeGeneration : MonoBehaviour
                     {
                         try
                         {
-                            if (map[i + 2, i2] == 1)
+                            if (map[i + 2, i2] == 1 || map[i + 2, i2] == 3)
                             {
                                 down = true;
                             }
-                            else if (map[i + 1, i2 - 1] == 1)
+                            else if (map[i + 1, i2 - 1] == 1 || map[i + 1, i2 - 1] == 3 )
                             {
                                 down = true;
                             }
-                            else if (map[i + 1, i2 + 1] == 1)
+                            else if (map[i + 1, i2 + 1] == 1 || map[i + 1, i2 + 1] == 3 )
                             {
                                 down = true;
                             }
@@ -382,15 +396,15 @@ public class MazeGeneration : MonoBehaviour
                     {
                         try
                         {
-                            if (map[i, i2 - 2] == 1)
+                            if (map[i, i2 - 2] == 1 || map[i,i2 -2] == 3)
                             {
                                 left = true;
                             }
-                            else if (map[i - 1, i2 - 1] == 1)
+                            else if (map[i - 1, i2 - 1] == 1 || map[i - 1, i2 - 1] == 3 )
                             {
                                 left = true;
                             }
-                            else if (map[i + 1, i2 - 1] == 1)
+                            else if (map[i + 1, i2 - 1] == 1 || map[i + 1, i2 - 1] == 3 )
                             {
                                 left = true;
                             }
@@ -418,15 +432,15 @@ public class MazeGeneration : MonoBehaviour
                     {
                         try
                         {
-                            if (map[i, i2 + 2] == 1)
+                            if (map[i, i2 + 2] == 1 || map[i, i2 + 2] == 3 )
                             {
                                 right = true;
                             }
-                            else if (map[i - 1, i2 + 1] == 1)
+                            else if (map[i - 1, i2 + 1] == 1 || map[i - 1, i2 + 1] == 3 )
                             {
                                 right = true;
                             }
-                            else if (map[i + 1, i2 + 1] == 1)
+                            else if (map[i + 1, i2 + 1] == 1 || map[i + 1, i2 + 1] == 3 )
                             {
                                 right = true;
                             }
@@ -455,7 +469,7 @@ public class MazeGeneration : MonoBehaviour
                 if (random2 == 2)
                 {
                     //Create new path
-                    Debug.Log("SCRIPTS");
+               
                     script.Generate(i, i2);
 
                 }

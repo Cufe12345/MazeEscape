@@ -145,19 +145,19 @@ public class Solver : MonoBehaviour
     public List<string> CheckMoveOptions()
     {
         List<string> options = new List<string>();
-        if(map[i+1,j] == 1)
+        if(map[i+1,j] == 1 || map[i+1,j] == 3)
         {
             options.Add("down");
         }
-        if (map[i - 1, j] == 1)
+        if (map[i - 1, j] == 1 || map[i-1,j] == 3)
         {
             options.Add("up");
         }
-        if (map[i, j + 1] == 1)
+        if (map[i, j + 1] == 1 || map[i,j+1] == 3)
         {
             options.Add("right");
         }
-        if (map[i, j - 1] == 1)
+        if (map[i, j - 1] == 1 || map[i,j-1] == 3)
         {
             options.Add("left");
         }
@@ -214,7 +214,7 @@ public class Solver : MonoBehaviour
             
             while(escaped == false) {
                 
-                Debug.Log("MoveNum: " + moveNum);
+                
                 //if its at any of these coordinates it means the enemy has escaped so breaks loop
                 if(i == 0 || i == mazeGenerationScript.mapSize-1 || j == 0 || j == mazeGenerationScript.mapSize-1)
                 {
@@ -310,7 +310,7 @@ public class Solver : MonoBehaviour
                             {
                                 while (true)
                                 {
-                                    Debug.Log(readDecisions);
+                                 
                                     //Checks if this is the enemy's first time at this decision or if its been here before
                                     if (readDecisions == false)
                                     {
@@ -331,7 +331,7 @@ public class Solver : MonoBehaviour
                                             int currentNumMoves = moveNum;
                                             temp.Add(currentNumMoves.ToString());
                                             temp.Add(options[randomNum]);
-                                            Debug.Log("Added1 " + Opposite(previousMove[moveNum - 2]) + "  Added2 " + currentNumMoves.ToString() + " Added3 " + options[randomNum]);
+                                            
 
                                             decisions.Add(temp);
                                             break;
@@ -340,7 +340,7 @@ public class Solver : MonoBehaviour
                                     else
                                     {
                                         //This is ran if enemy has been to this decision before
-                                        Debug.Log("Reached");
+                                      
                                         int randomNum = Random.Range(0, options.Count);
                                         bool possible = false;
                                         //Checks if there are an moves which the enemy hasnt made yet at this decision
