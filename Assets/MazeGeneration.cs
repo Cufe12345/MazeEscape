@@ -21,6 +21,7 @@ public class MazeGeneration : MonoBehaviour
     GameObject enemy;
     GameObject mapObject;
     GameObject enemiesObject;
+    GameObject finishFlag;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +39,7 @@ public class MazeGeneration : MonoBehaviour
         floor = GameObject.Find("Floor");
         mapObject = GameObject.Find("Map");
         enemiesObject = GameObject.Find("Enemies");
+        finishFlag = GameObject.Find("FinishFlag");
         for (int i = 0; i < mapSize; i++)
         {
             for (int i2 = 0; i2 < mapSize; i2++)
@@ -218,6 +220,7 @@ public class MazeGeneration : MonoBehaviour
         Debug.LogWarning(finalI + " " + finalI2);
         //hollows out the exit selected in the checkExit function
         map[finalI, finalI2] = 1;
+        finishFlag.transform.position = new Vector3(finalI * 50, 0, finalI2 * 50);
         int enemyCount = 1;
         //iterates over the array spawning in walls in the correct places
         for (int i = 0; i < mapSize; i++)
