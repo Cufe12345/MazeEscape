@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,11 +7,13 @@ public class Fired : MonoBehaviour
 {
     Rigidbody rigi;
     GameObject player;
+    public GameObject origin;
     Movement move;
     public float speed = 50000;
     public GameObject gun;
     public GameObject bulletSpawner;
     public bool start = false;
+    public float damage = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -68,12 +71,43 @@ public class Fired : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-     
-       //destroys bullet if it has collided with anything other than the gun
-        if (collision.gameObject != gun)
-        {
 
+        //destroys bullet if it has collided with anything other than the gun or bullet
+        if (collision.gameObject != gun && !collision.gameObject.name.Contains("Shotgun Shell"))
+        {
+            //if the gameobject that created the bullet is an enemy it makes sure it isnt damaging an enemy
+            if (origin.transform.name.Contains("Enemies"))
+            {
+
+
+                if (!collision.gameObject.transform.root.gameObject.transform.name.Contains("Enemies"))
+                {
+                    Damage(collision);
+                }
+
+
+            }
+            //if the gameobject that created the bullet is an player it makes sure it isnt damaging the player
+            else
+            {
+                if (!collision.gameObject.transform.root.gameObject.transform.name.Contains("Player"))
+                {
+                    Damage(collision);
+                }
+            }
             Destroy(this.gameObject);
+        }
+    }
+    //Deals the damage
+    public void Damage(Collision collision)
+    {
+        if (collision.gameObject.name.Contains("Player"))
+        {
+            collision.gameObject.GetComponent<Health>().health -= damage;
+        }
+        else if (collision.gameObject.name.Contains("Enemy"))
+        {
+            collision.gameObject.GetComponent<Health>().health -= damage * 4;
         }
     }
 }

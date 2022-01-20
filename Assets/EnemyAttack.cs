@@ -68,7 +68,7 @@ public class EnemyAttack : MonoBehaviour
                 if(parent.name == transform.gameObject.name)
                 {
              
-                    g.GetComponent<GenerateBullet>().FireWeapon();
+                    g.GetComponent<GenerateBullet>().FireWeapon(0);
                     break;
                 }
                 else

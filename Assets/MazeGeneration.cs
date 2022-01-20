@@ -250,6 +250,7 @@ public class MazeGeneration : MonoBehaviour
                     temp3.transform.parent = enemiesObject.transform;
                     temp3.GetComponent<EnemyAttack>().enabled = true;
                     temp3.name = "Enemy" + enemyCount;
+                    temp3.GetComponent<EnemyMovement>().enabled = true;
                     enemyCount++;
 
                 }

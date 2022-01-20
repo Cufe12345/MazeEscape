@@ -50,7 +50,15 @@ public class GenerateBullet : MonoBehaviour
                     if (tempBullet > 0)
                     {
                         transform.GetComponent<Reload>().bulletCount--;
-                        FireWeapon();
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            FireWeapon(0);
+                        }
+                        FireWeapon(1);
+                        FireWeapon(-1);
+
+
 
                     }
                     else
@@ -73,7 +81,7 @@ public class GenerateBullet : MonoBehaviour
         }
 
     }
-    public void FireWeapon()
+    public void FireWeapon(float up)
     {
         transform.GetComponent<AudioSource>().Play();
         
@@ -84,10 +92,12 @@ public class GenerateBullet : MonoBehaviour
         temp.GetComponentInChildren<MeshRenderer>().enabled = false;
         //sets new bullets position and rotation
         temp.transform.position = bulletSpawner.transform.position;
+        temp.transform.position = new Vector3(temp.transform.position.x, temp.transform.position.y + up, temp.transform.position.z);
         float y = bulletSpawner.transform.eulerAngles.y - 10;
         float x = bulletSpawner.transform.eulerAngles.x - 90;
         temp.transform.rotation = Quaternion.Euler(x, y, bulletSpawner.transform.rotation.z);
         //enables fired script and passes relevant variables needed by the fired script
+        temp.GetComponent<Fired>().origin = this.gameObject.transform.parent.root.gameObject;
         temp.GetComponent<Fired>().gun = this.gameObject;
         temp.GetComponent<Fired>().bulletSpawner = bulletSpawner;
         temp.GetComponent<Fired>().enabled = true;
