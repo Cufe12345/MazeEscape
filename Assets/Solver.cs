@@ -17,10 +17,11 @@ public class Solver : MonoBehaviour
     int difficultly = 0;
     float solverTime = 0.1f;
     GameObject player;
+    GameObject finishFlag;
     // Start is called before the first frame update
     void Start()
     {
-
+        finishFlag = GameObject.Find("FinishFlag");
         player = GameObject.Find("Player");
         first = true;
         camera = GameObject.Find("Main Camera");
@@ -52,7 +53,8 @@ public class Solver : MonoBehaviour
             {
                 if (reset2 == false)
                 {
-                    reset2 = true;
+                    finishFlag.GetComponent<FinishGame>().EndGame(false);
+                    /*reset2 = true;
                     Debug.Log("RESTTING MAZE");
                     first = true;
                     reset = false;
@@ -62,7 +64,7 @@ public class Solver : MonoBehaviour
                     i = (mazeGenerationScript.mapSize / 2) - 1;
                     j = i;
                     transform.position = new Vector3(i * 50, 1, j * 50);
-                    player.transform.position = new Vector3(i * 50, 50, j * 50);
+                    player.transform.position = new Vector3(i * 50, 50, j * 50);*/
                 }
             }
         }

@@ -25,6 +25,7 @@ public class MazeGeneration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         //Initialise's the variables and sets the whole map to true to fill it up.
         //hard coded difficulty later on once main menu created it doesnt have to be hard coded
         //map size and max paths initialised based on difficulty value

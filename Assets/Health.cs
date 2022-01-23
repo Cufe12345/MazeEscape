@@ -7,15 +7,21 @@ public class Health : MonoBehaviour
     bool player;
     public float health;
     float regenTime = 10;
+    public int kills;
+    public int deaths;
     float initialHealth;
     int i;
     int j;
     GameObject camera;
     MazeGeneration mazeGenerationScript;
     GameObject healthPanel;
+    GameObject playerG;
     // Start is called before the first frame update
     void Start()
     {
+        kills = 0;
+        deaths = 0;
+        playerG = GameObject.Find("Player");
         //sets initial health
         health = 100;
         if (transform.name.Contains("Player"))
@@ -49,10 +55,12 @@ public class Health : MonoBehaviour
                 //teleports player back to centre of the maze
                 transform.position = new Vector3(i * 50, 50, j * 50);
                 health = 100;
+                deaths += 1;
             }
             else
             {
                 //destorys the enemy
+                playerG.GetComponent<Health>().kills += 1;
                 Destroy(this.gameObject);
             }
         }
