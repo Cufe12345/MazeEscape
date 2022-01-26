@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FinishGame : MonoBehaviour
@@ -35,7 +36,13 @@ public class FinishGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(end == true)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                SceneManager.LoadScene("MainMenuScene");
+            }
+        }
     }
     //Ends the game
     public void EndGame(bool win)
