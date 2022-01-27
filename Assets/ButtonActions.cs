@@ -30,7 +30,7 @@ public class ButtonActions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.LogError("Scene count: " + SceneManager.sceneCount);
     }
     public void Highlighted(int n)
     {
@@ -66,6 +66,10 @@ public class ButtonActions : MonoBehaviour
     public void Play()
     {
         SceneManager.LoadScene("GameScene");
+    }
+    public void Tutorial()
+    {
+        SceneManager.LoadScene("Tutorial");
     }
     //runs when exit button pressed
     public void Exit()

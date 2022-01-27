@@ -9,7 +9,7 @@ public class FinishGame : MonoBehaviour
     GameObject enemySolver;
     GameObject player;
     GameObject enemies;
-    GameObject gameOverPanel;
+    public GameObject gameOverPanel;
     GameObject killText;
     GameObject deathText;
     GameObject timeElapsedText;
@@ -40,6 +40,7 @@ public class FinishGame : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Space))
             {
+                Cursor.lockState = CursorLockMode.None;
                 SceneManager.LoadScene("MainMenuScene");
             }
         }

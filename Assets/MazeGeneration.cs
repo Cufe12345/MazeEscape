@@ -2,39 +2,44 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MazeGeneration : MonoBehaviour
 {
-    public int difficulty = 0;
-    public int mapSize = 0;
-    int maxPaths = 0;
+    public int difficulty;
+    public int mapSize;
+    int maxPaths;
     public int[,] map;
-    int centre = 0;
+    int centre;
     GameObject wall;
-    List<Path> paths = new List<Path>();
-    bool first = true;
+    List<Path> paths;
+    bool first;
     int finalI;
     int finalI2;
-    public bool complete = false;
-    public bool resetMaze = false;
+    public bool complete;
+    public bool resetMaze;
     GameObject floor;
     GameObject enemy;
     GameObject mapObject;
     GameObject enemiesObject;
     GameObject finishFlag;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        
         Cursor.lockState = CursorLockMode.Locked;
         //Initialise's the variables and sets the whole map to true to fill it up.
         //hard coded difficulty later on once main menu created it doesnt have to be hard coded
         //map size and max paths initialised based on difficulty value
         difficulty = 3;
         complete = false;
+        resetMaze = false;
+        paths = new List<Path>();
         enemy = GameObject.Find("Enemy");
         mapSize = difficulty * 30;
         maxPaths = difficulty * 20;
         centre = (mapSize / 2) - 1;
+        first = true;
         map = new int[mapSize, mapSize];
         wall = GameObject.Find("Wall");
         floor = GameObject.Find("Floor");
@@ -78,7 +83,7 @@ public class MazeGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.LogError("Scene count: "+SceneManager.sceneCount);
         if (first == true)
         {
             //Checks if all the paths are finished and if they are runs the CheckExit function and stops this code repeating
@@ -264,6 +269,7 @@ public class MazeGeneration : MonoBehaviour
     }
     public void Generate(int i, int i2)
     {
+        Debug.LogError("RANNNNNNNNNN");
         //Creates a new path object
         if (paths.Count < maxPaths)
         {
@@ -280,20 +286,25 @@ public class MazeGeneration : MonoBehaviour
     }
     public void Run(IEnumerator a)
     {
-        StartCoroutine(a);
+            StartCoroutine(a);
+       
+        
     }
     public class Path
     {
-        static GameObject main2 = GameObject.Find("Main Camera");
-        static MazeGeneration script = main2.GetComponent<MazeGeneration>();
-        public int[,] map = script.map;
+         GameObject main2 = GameObject.Find("Main Camera");
+        MazeGeneration script;
+        public int[,] map;
         public bool done = false;
         public bool original = false;
         int finalI;
         int finalI2;
         public Path(int a, int b)
         {
+            script = main2.GetComponent<MazeGeneration>();
+            map = script.map;
             script.Run(Generate2(a, b));
+            
         }
 
 

@@ -11,16 +11,22 @@ public class Solver : MonoBehaviour
     int[,] map;
     int i;
     int j;
-    bool reset = false;
-    bool reset2 = false;
+    public bool complete;
+    public bool tutorial;
+    bool reset;
+    bool reset2;
     Animator walking;
-    int difficultly = 0;
-    float solverTime = 0.1f;
+    int difficultly;
+    float solverTime;
     GameObject player;
     GameObject finishFlag;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        complete = false;
+        tutorial = false;
+        reset = false;
+        reset2 = false;
         finishFlag = GameObject.Find("FinishFlag");
         player = GameObject.Find("Player");
         first = true;
@@ -53,7 +59,12 @@ public class Solver : MonoBehaviour
             {
                 if (reset2 == false)
                 {
-                    finishFlag.GetComponent<FinishGame>().EndGame(false);
+                    complete = true;
+                    if (tutorial == false)
+                    {
+                        finishFlag.GetComponent<FinishGame>().EndGame(false);
+                    }
+                   
                     /*reset2 = true;
                     Debug.Log("RESTTING MAZE");
                     first = true;

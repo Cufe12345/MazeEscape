@@ -9,6 +9,7 @@ TagManager:
   - T
   - Gun
   - BulletText
+  - PlayerGun
   layers:
   - Default
   - TransparentFX

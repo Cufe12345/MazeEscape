@@ -9,7 +9,7 @@ public class Fired : MonoBehaviour
     GameObject player;
     public GameObject origin;
     Movement move;
-    public float speed = 50000;
+    public float speed;
     public GameObject gun;
     public GameObject bulletSpawner;
     public bool start = false;
