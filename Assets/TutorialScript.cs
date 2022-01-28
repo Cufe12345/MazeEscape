@@ -41,7 +41,26 @@ public class TutorialScript : MonoBehaviour
     //this function sets the tutorial text to whatever string is passed to it.
     public void setText(string text)
     {
-        tutorialText.GetComponent<Text>().text = text;
+        tutorialText.GetComponent<Text>().text = " ";
+        StartCoroutine(scrollText(text));
+        
+    }
+    IEnumerator scrollText(string text)
+    {
+        string tempText = " ";
+        foreach(char c in text)
+        {
+            tempText += c.ToString();
+            tutorialText.GetComponent<Text>().text = tempText;
+            if (text.Length > 50)
+            {
+                yield return new WaitForSeconds(0.05f);
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
     }
     //function for the movement and looking tutorial
     IEnumerator movement()
@@ -220,7 +239,7 @@ public class TutorialScript : MonoBehaviour
         //runs till the ai solves the maze and constantly makes the player follow the ai above
         while (true)
         {
-            player.transform.position = new Vector3(solver.transform.position.x, solver.transform.position.y + 150, solver.transform.position.z);
+            player.transform.position = new Vector3(solver.transform.position.x, solver.transform.position.y + 500, solver.transform.position.z);
             player.transform.rotation = Quaternion.Euler(90, 0, 0);
             if(solver.GetComponent<Solver>().complete == true)
             {
