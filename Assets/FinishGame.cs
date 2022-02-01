@@ -14,7 +14,7 @@ public class FinishGame : MonoBehaviour
     GameObject deathText;
     GameObject timeElapsedText;
     GameObject outcomeText;
-    int timeElapsed;
+    public int timeElapsed;
     bool end;
     // Start is called before the first frame update
     void Start()

@@ -23,6 +23,7 @@ public class MazeGeneration : MonoBehaviour
     GameObject mapObject;
     GameObject enemiesObject;
     GameObject finishFlag;
+    public int totalPaths;
     // Start is called before the first frame update
     void Awake()
     {
@@ -83,7 +84,6 @@ public class MazeGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.LogError("Scene count: "+SceneManager.sceneCount);
         if (first == true)
         {
             //Checks if all the paths are finished and if they are runs the CheckExit function and stops this code repeating
@@ -269,11 +269,11 @@ public class MazeGeneration : MonoBehaviour
     }
     public void Generate(int i, int i2)
     {
-        Debug.LogError("RANNNNNNNNNN");
+        
         //Creates a new path object
         if (paths.Count < maxPaths)
         {
-
+            totalPaths++;
             Path p = new Path(i, i2);
             paths.Add(p);
             if (paths.Count == 1)

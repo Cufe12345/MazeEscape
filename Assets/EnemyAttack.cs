@@ -7,6 +7,7 @@ public class EnemyAttack : MonoBehaviour
 {
     GameObject player;
     GameObject eye;
+    bool stop;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,47 +49,58 @@ public class EnemyAttack : MonoBehaviour
                 //if the distance is less than 100 it fires the weapon
                 if(dist2 < 100)
                 {
-                
-                    StartCoroutine(Fire());
+                    if (stop == true)
+                    {
+                        StartCoroutine(Fire());
+                        stop = false;
+                    }
+
+                }
+                else
+                {
+                    stop = true;
                 }
             }
         }
     }
     IEnumerator Fire()
     {
-        int number = 0;
-        //For every gun in the scene it checks if the parents of it are equal to the enemy itself
-        foreach(GameObject g in GameObject.FindGameObjectsWithTag("Gun"))
+        while (true)
         {
-            number++;
-            GameObject parent = g.transform.parent.gameObject;
-            while(parent != null)
+            int number = 0;
+            //For every gun in the scene it checks if the parents of it are equal to the enemy itself
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Gun"))
             {
-            //when it finds the gun whos parent is this enemies it fires the gun
-                if(parent.name == transform.gameObject.name)
+                number++;
+                GameObject parent = g.transform.parent.gameObject;
+                while (parent != null)
                 {
-             
-                    g.GetComponent<GenerateBullet>().FireWeapon(0);
-                    break;
-                }
-                else
-                {
-                    try
+                    //when it finds the gun whos parent is this enemies it fires the gun
+                    if (parent.name == transform.gameObject.name)
                     {
-                        parent = parent.transform.parent.gameObject;
-                    }catch(NullReferenceException e)
-                    {
-                        parent = null;
+
+                        g.GetComponent<GenerateBullet>().FireWeapon(0);
                         break;
                     }
+                    else
+                    {
+                        try
+                        {
+                            parent = parent.transform.parent.gameObject;
+                        }
+                        catch (NullReferenceException e)
+                        {
+                            parent = null;
+                            break;
+                        }
+                    }
+
                 }
-                
+
+
+
             }
-            
-
-
+            yield return new WaitForSeconds(0.2f);
         }
-        yield return new WaitForSeconds(0.01f);
-        Debug.LogWarning("Number is: " + number);
     }
 }

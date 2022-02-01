@@ -20,6 +20,7 @@ public class Solver : MonoBehaviour
     float solverTime;
     GameObject player;
     GameObject finishFlag;
+    public int deadEnds;
     // Start is called before the first frame update
     void Awake()
     {
@@ -281,6 +282,7 @@ public class Solver : MonoBehaviour
                     //Runs if enemy reached deadend and has to go back
                     if (goingBack == true)
                     {
+                        
                         Debug.LogError("GoBAck2");
                         if (options.Count < 3)
                         {
@@ -389,7 +391,7 @@ public class Solver : MonoBehaviour
                                             /*checks if the choosen move isnt the direction the enemy came from
                                              * and makes sure that the enemy didnt decide to go that way before
                                              * at this decision*/
-
+                                            
                                             if (options[randomNum] != Opposite(previousMove[moveNum - 1]))
                                             {
                                                 bool moveAble = true;
@@ -406,6 +408,7 @@ public class Solver : MonoBehaviour
                                                 }
                                                 if (moveAble == true)
                                                 {
+                                                    deadEnds++;
                                                     /*this runs if the move is valid and moves the enemy and stores
                                                      * its decision in the previous move and decisions array*/
                                                     Debug.Log("Reached3 " + options[randomNum]);
@@ -420,6 +423,7 @@ public class Solver : MonoBehaviour
                                         }
                                         else
                                         {
+                                            
                                             /*ran if no move options are left, it moves the enemy back to the direction
                                              * it came from when it reached the decision for the first time
                                              * it also removes the decision from the decision array.*/
