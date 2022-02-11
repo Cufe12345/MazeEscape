@@ -7,6 +7,7 @@ public class GenerateBullet : MonoBehaviour
     GameObject bullet;
     GameObject bulletSpawner;
     GameObject muzzleFlash;
+    GameObject camera;
     float timer = 0.1f;
     bool fired = false;
     bool enemy;
@@ -33,6 +34,7 @@ public class GenerateBullet : MonoBehaviour
         {
             enemy = true;
         }
+        camera = GameObject.Find("Main Camera");
     }
 
     // Update is called once per frame
@@ -43,6 +45,7 @@ public class GenerateBullet : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
+                camera.transform.rotation = Quaternion.Euler(camera.transform.eulerAngles.x - 10, camera.transform.eulerAngles.y, camera.transform.eulerAngles.z);
                 int tempBullet = transform.GetComponent<Reload>().bulletCount;
                 bool reloading = transform.GetComponent<Reload>().reloading;
                 if (reloading == false)

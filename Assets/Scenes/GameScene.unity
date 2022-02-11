@@ -1067,7 +1067,7 @@ GameObject:
   - component: {fileID: 195316201}
   m_Layer: 7
   m_Name: M4 Shotgun2
-  m_TagString: Untagged
+  m_TagString: PlayerGun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1079,7 +1079,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 195316195}
-  m_LocalRotation: {x: -0.23805074, y: 0.50807184, z: -0.17932113, w: -0.8081082}
+  m_LocalRotation: {x: -0.1979895, y: 0.53067076, z: -0.14845236, w: -0.81064826}
   m_LocalPosition: {x: -0.13590808, y: 0.18055592, z: 0.056435015}
   m_LocalScale: {x: 0.06250003, y: 0.06250083, z: 0.06250178}
   m_Children:
@@ -1139,6 +1139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c704da08c5b21ec48b016a8a7ec4931c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiming: 0
 --- !u!114 &195316200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4920,16 +4921,17 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677089697}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.011950687, y: -0, z: -0, w: 0.99992865}
   m_LocalPosition: {x: 0.066, y: 1.486, z: 0.372}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1842246313}
   - {fileID: 1595281404}
   - {fileID: 272552206}
+  - {fileID: 1717205654}
   m_Father: {fileID: 1097993337}
   m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 1.369, y: 0, z: 0}
 --- !u!114 &677089699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10115,6 +10117,55 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1715548890}
   m_Mesh: {fileID: -8678823145569952518, guid: f0fd05423d7724440a04458ed38b5954, type: 3}
+--- !u!1 &1717205653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1717205654}
+  - component: {fileID: 1717205655}
+  m_Layer: 6
+  m_Name: Crosshair
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1717205654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717205653}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.55, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_Children: []
+  m_Father: {fileID: 677089698}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1717205655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717205653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 661321087b04ff64fbbc4c85833f83c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_crosshair:
+    size: 31
+    thickness: 2
+    gap: 138
+    color: {r: 1, g: 0, b: 0, a: 1}
+  m_crosshairImage: {fileID: 0}
 --- !u!1 &1726426043
 GameObject:
   m_ObjectHideFlags: 0

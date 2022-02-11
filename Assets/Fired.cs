@@ -71,7 +71,7 @@ public class Fired : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-
+        Debug.Log("COLLIDED WITH " + collision.gameObject.name);
         //destroys bullet if it has collided with anything other than the gun or bullet
         if (collision.gameObject != gun && !collision.gameObject.name.Contains("Shotgun Shell"))
         {
